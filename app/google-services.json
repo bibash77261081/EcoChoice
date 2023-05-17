@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "725902232169",
+    "project_id": "ecochoice-a5eb3",
+    "storage_bucket": "ecochoice-a5eb3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725902232169:android:6d23cb8a89b0f17211f0f8",
+        "android_client_info": {
+          "package_name": "com.example.ecochoice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725902232169-u55p4fjqqc166h3pngneohhcml11djjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVR8ZJ0MZiBEyj3ke_CB8kXFS6Cg78CiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725902232169-u55p4fjqqc166h3pngneohhcml11djjk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
