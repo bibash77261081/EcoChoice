@@ -50,7 +50,7 @@
         android:id="@+id/newUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New user? Register"
+        android:text="@string/new_user"
         android:gravity="center"/>
 
 </LinearLayout>
