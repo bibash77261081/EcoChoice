@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -87,6 +88,14 @@ public class MainActivity extends AppCompatActivity {
     public void navigateToProductScan() {
         ProductScanFragment productScanFragment = new ProductScanFragment();
         replaceFragment(productScanFragment, TAG_PRODUCT_SCAN);
+
+        // Auto-click the scan button
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                productScanFragment.initiateBarcodeScan();
+            }
+        }, 100);
     }
 
     public void navigateToScannedProductList() {
