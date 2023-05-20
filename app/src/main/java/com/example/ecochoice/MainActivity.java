@@ -89,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
         ProductScanFragment productScanFragment = new ProductScanFragment();
         replaceFragment(productScanFragment, TAG_PRODUCT_SCAN);
 
-        // Auto-click the scan button
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                productScanFragment.initiateBarcodeScan();
-            }
-        }, 100);
+//        // Initiate scanner
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                productScanFragment.initiateBarcodeScan();
+//            }
+//        }, 100);
     }
 
     public void navigateToScannedProductList() {
