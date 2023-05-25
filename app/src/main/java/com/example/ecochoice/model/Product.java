@@ -1,4 +1,4 @@
-package com.example.ecochoice.Model;
+package com.example.ecochoice.model;
 
 public class Product {
     private String id;

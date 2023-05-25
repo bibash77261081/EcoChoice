@@ -1,66 +1,81 @@
 package com.example.ecochoice.fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.ecochoice.MainActivity;
 import com.example.ecochoice.R;
+import com.example.ecochoice.adapter.ProductAdapter;
+import com.example.ecochoice.model.Product;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ScannedProductListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ScannedProductListFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class ScannedProductListFragment extends Fragment implements ProductAdapter.OnItemClickListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private DatabaseReference productsRef;
+    private RecyclerView recyclerView;
+    private ProductAdapter adapter;
 
-    public ScannedProductListFragment() {
-        // Required empty public constructor
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_scanned_product_list, container, false);
+
+        // Initialize Firebase database reference
+        productsRef = FirebaseDatabase.getInstance().getReference().child("products");
+
+        // Initialize RecyclerView and its adapter
+        recyclerView = view.findViewById(R.id.productRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ProductAdapter();
+        adapter.setOnItemClickListener(this);
+        recyclerView.setAdapter(adapter);
+
+        // Retrieve product data from Firebase
+        fetchProductsFromDatabase();
+
+        return view;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ScannedProductListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ScannedProductListFragment newInstance(String param1, String param2) {
-        ScannedProductListFragment fragment = new ScannedProductListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    private void fetchProductsFromDatabase() {
+        productsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Product> productList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Product product = snapshot.getValue(Product.class);
+                    productList.add(product);
+                }
+                adapter.setProducts(productList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Failed to retrieve products", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_scanned_product_list, container, false);
+    public void onItemClick(Product product) {
+        // Navigate to the ProductInformationFragment and pass the selected product
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.navigateToProductInformation(product);
     }
 }
+
+
+

@@ -6,23 +6,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.ecochoice.R;
-import com.example.ecochoice.Model.Product;
+import com.example.ecochoice.model.Product;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,12 +38,16 @@ import okhttp3.Response;
 public class ProductScanFragment extends Fragment {
 
     private Button scanButton;
+    private ImageView productImageView;
     private TextView productNameTextView;
     private TextView productDescriptionTextView;
+    private TextView environmentalEffectTextView;
+    private TextView ecoFriendlyTipsTextView;
+    private TextView alternativeProductsTextView;
     private LinearLayout resultView;
-
     private Button addButton;
     private DatabaseReference productsRef;
+    private String storedImageUrl;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,15 +56,28 @@ public class ProductScanFragment extends Fragment {
         productsRef = FirebaseDatabase.getInstance().getReference().child("products");
 
         scanButton = view.findViewById(R.id.scanButton);
+        productImageView = view.findViewById(R.id.productImageView);
         productNameTextView = view.findViewById(R.id.productNameTextView);
         productDescriptionTextView = view.findViewById(R.id.productDescriptionTextView);
+        environmentalEffectTextView = view.findViewById(R.id.environmentalEffectTextView);
+        ecoFriendlyTipsTextView = view.findViewById(R.id.ecoFriendlyTipsTextView);
+        alternativeProductsTextView = view.findViewById(R.id.alternativeProductsTextView);
         resultView = view.findViewById(R.id.resultLayout);
         addButton = view.findViewById(R.id.addButton);
+        storedImageUrl = "N/A";
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Initiate barcode scanning
                 startBarcodeScanner();
+            }
+        });
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Save the product data to Firebase database
+                saveProductToDatabase();
             }
         });
 
@@ -72,7 +94,6 @@ public class ProductScanFragment extends Fragment {
         integrator.setPrompt("Scan a barcode");
         integrator.setCameraId(0); // Use rear camera
         integrator.setBeepEnabled(false);
-//        integrator.setOrientationLocked(false); // Unlock orientation
         integrator.initiateScan();
     }
 
@@ -93,7 +114,6 @@ public class ProductScanFragment extends Fragment {
 
         // Construct the URL for the API request with the scanned barcode
         String apiUrl = "https://product-lookup-by-upc-or-ean.p.rapidapi.com/code/" + barcode;
-
         Request request = new Request.Builder()
                 .url(apiUrl)
                 .get()
@@ -111,17 +131,24 @@ public class ProductScanFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    resultView.setVisibility(View.VISIBLE);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            resultView.setVisibility(View.VISIBLE);
+                        }
+                    });
 
                     String responseData = response.body().string();
+
                     // Parse the response data and retrieve the product information
                     Product product = parseProductInformation(responseData);
                     // Display the retrieved product information in UI
                     displayProductInformation(product);
                 } else {
-                    // Handle the API request error
-                    handleApiRequestError(response);
-                }
+                // Handle the API request error
+                handleApiRequestError(response);
+            }
             }
         });
     }
@@ -134,11 +161,19 @@ public class ProductScanFragment extends Fragment {
             // Extract the name and description from the JSON object
             String name = productData.getString("name");
             String description = productData.getString("description");
+            String imageUrl = jsonObject.getString("imageUrl");
+//            String environmentalEffects = jsonObject.getString("environmental_impact");
+//            String ecoFriendlyTips = jsonObject.getString("eco_friendly_tips");
+//            String alternativeProducts = jsonObject.getString("alternative_products");
 
             // Create a new Product object with the extracted information
             Product product = new Product();
             product.setName(name);
             product.setDescription(description);
+//            product.setImageUrl(imageUrl);
+//            product.setEnvironmentalEffects(environmentalEffects);
+//            product.setEcoFriendlyTips(ecoFriendlyTips);
+//            product.setAlternativeProducts(alternativeProducts);
 
             return product;
         } catch (JSONException e) {
@@ -153,17 +188,24 @@ public class ProductScanFragment extends Fragment {
         }
     }
 
-
-
-
     private void displayProductInformation(Product product) {
         if (product != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    storedImageUrl = product.getImageUrl();
+
+                    Glide.with(getContext())
+                            .load(storedImageUrl)
+                            .placeholder(R.drawable.product_image_placeholder) // Placeholder image while loading
+                            .error(R.drawable.error_image) // Error image if unable to load
+                            .into(productImageView);
+
                     // Display the retrieved product information in UI
                     productNameTextView.setText(product.getName());
                     productDescriptionTextView.setText(product.getDescription());
+//                    environmentalImpactTextView.setText(environmentalImpact);
+//                    ecoFriendlyTipsTextView.setText(ecoFriendlyTips);
                 }
             });
         } else {
@@ -181,8 +223,7 @@ public class ProductScanFragment extends Fragment {
     private void handleApiRequestFailure(IOException e) {
         // Handle the API request failure
         e.printStackTrace();
-        // Example: Show a Toast message
-        Toast.makeText(getContext(), "API request failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Failed to fetch products: " + e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     private void handleApiRequestError(Response response) {
@@ -198,4 +239,26 @@ public class ProductScanFragment extends Fragment {
         });
     }
 
+    private void saveProductToDatabase() {
+        String productName = productNameTextView.getText().toString().trim();
+        String productDescription = productDescriptionTextView.getText().toString().trim();
+        String imageUrl = storedImageUrl.trim();
+        String environmentalEffects = environmentalEffectTextView.getText().toString().trim();
+        String ecoFriendlyTips = ecoFriendlyTipsTextView.getText().toString().trim();
+        String alternativeProducts = alternativeProductsTextView.getText().toString().trim();
+
+        String productId = productsRef.push().getKey();
+
+        // Create a Product object with the scanned data
+        Product product = new Product(productId, productName, productDescription, imageUrl, environmentalEffects, ecoFriendlyTips, alternativeProducts);
+
+        // Save the product to the Firebase database
+        productsRef.child(productId).setValue(product).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(getContext(), "Product added successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Failed to add product", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

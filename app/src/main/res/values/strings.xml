@@ -7,6 +7,10 @@
     <string name="new_user">New user? Register</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="already_registered">Already registered? Login</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="product_image">Product Image</string>
+    <string name="product_description">Product Description</string>
+    <string name="product_name">Product Name</string>
+    <string name="environmental_effect">Environmental Effect</string>
+    <string name="eco_friendly_tips">Eco-Friendly Tipa</string>
+    <string name="alternative_products">Alternative Products</string>
 </resources>
