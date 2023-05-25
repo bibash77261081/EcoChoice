@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.HomeFragment">
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo"
+        android:scaleType="centerCrop"
+        android:padding="16dp" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home" />
+        android:id="@+id/recommendedProductsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recommended Products"
+        android:textSize="18sp"
+        android:padding="16dp" />
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recommendedProductsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp" />
+
+</LinearLayout>
+

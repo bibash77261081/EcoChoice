@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,8 +17,11 @@ import com.example.ecochoice.fragment.ProductInformationFragment;
 import com.example.ecochoice.fragment.ProductScanFragment;
 import com.example.ecochoice.fragment.ScannedProductListFragment;
 import com.example.ecochoice.login_register.LoginActivity;
+import com.example.ecochoice.model.Product;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,14 +90,6 @@ public class MainActivity extends AppCompatActivity {
     public void navigateToProductScan() {
         ProductScanFragment productScanFragment = new ProductScanFragment();
         replaceFragment(productScanFragment, TAG_PRODUCT_SCAN);
-
-//        // Initiate scanner
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                productScanFragment.initiateBarcodeScan();
-//            }
-//        }, 100);
     }
 
     public void navigateToScannedProductList() {
@@ -103,8 +97,11 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(scannedProductListFragment, TAG_SCANNED_PRODUCT_LIST);
     }
 
-    public void navigateToProductInformation() {
+    public void navigateToProductInformation(Product product) {
         ProductInformationFragment productInformationFragment = new ProductInformationFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("product", (Serializable) product);
+        productInformationFragment.setArguments(bundle);
         replaceFragment(productInformationFragment, TAG_PRODUCT_INFORMATION);
     }
 
