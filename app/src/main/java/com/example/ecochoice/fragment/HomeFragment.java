@@ -76,9 +76,10 @@ public class HomeFragment extends Fragment {
                 }
 
                 // Set up the RecyclerView with the recommended products list
-                RecommendedProductsAdapter adapter = new RecommendedProductsAdapter(recommendedProductsList);
-                recommendedProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                RecommendedProductsAdapter adapter = new RecommendedProductsAdapter(recommendedProductsList, getContext());
+                recommendedProductsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                 recommendedProductsRecyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

@@ -8,22 +8,23 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_margin="16dp"/>
+        android:layout_height="150dp" />
 
     <TextView
         android:id="@+id/recommendedProductsLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Recommended Products"
+        android:textStyle="bold"
+        android:textAlignment="center"
         android:textSize="18sp"
-        android:padding="16dp" />
+        android:layout_marginTop="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recommendedProductsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp" />
+        android:layout_marginTop="16dp"/>
 
 </LinearLayout>
 

@@ -22,10 +22,10 @@
             android:id="@+id/resultLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_below="@id/scanButton"
             android:layout_centerHorizontal="true"
-            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -33,6 +33,7 @@
                 android:id="@+id/productImageView"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/product_image_placeholder" />
 
             <LinearLayout
@@ -45,8 +46,9 @@
                     android:id="@+id/NameLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Product Name: "
                     android:layout_marginEnd="8dp"
+                    android:text="Product Name: "
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -69,8 +71,9 @@
                     android:id="@+id/DescriptionLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Product Description: "
                     android:layout_marginEnd="8dp"
+                    android:text="Product Description: "
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -93,8 +96,9 @@
                     android:id="@+id/environmentalEffectLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Environmental Effects: "
                     android:layout_marginEnd="8dp"
+                    android:text="Environmental Effects: "
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -117,8 +121,9 @@
                     android:id="@+id/ecoFriendlyTipsLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Eco-Friendly Tips: "
                     android:layout_marginEnd="8dp"
+                    android:text="Eco-Friendly Tips: "
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -141,8 +146,9 @@
                     android:id="@+id/alternativeProductsLabelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Alternative Products: "
                     android:layout_marginEnd="8dp"
+                    android:text="Alternative Products: "
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <TextView
@@ -159,8 +165,8 @@
                 android:id="@+id/addButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add to List"
                 android:layout_marginTop="8dp"
+                android:text="Add to List"
                 android:textColor="@color/white" />
 
         </LinearLayout>

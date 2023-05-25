@@ -36,7 +36,7 @@ public class ProductInformationFragment extends Fragment {
     public static ProductInformationFragment newInstance(Product product) {
         ProductInformationFragment fragment = new ProductInformationFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PRODUCT, (Serializable) product);
+        args.putParcelable(ARG_PRODUCT, product);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,13 +45,17 @@ public class ProductInformationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            product = (Product) getArguments().getSerializable(ARG_PRODUCT);
+            product = getArguments().getParcelable(ARG_PRODUCT);
         }
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_product_information, container, false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_product_information, container, false);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         productNameTextView = view.findViewById(R.id.productNameTextView);
         descriptionTextView = view.findViewById(R.id.productDescriptionTextView);
@@ -60,25 +64,23 @@ public class ProductInformationFragment extends Fragment {
         ecoFriendlyTipsTextView = view.findViewById(R.id.ecoFriendlyTipsTextView);
         alternativeProductsTextView = view.findViewById(R.id.alternativeProductsTextView);
 
-        displayProductInformation();
-
-        return view;
+        populateProductInformation();
     }
 
-    private void displayProductInformation() {
+    private void populateProductInformation() {
         if (product != null) {
             productNameTextView.setText(product.getName());
             descriptionTextView.setText(product.getDescription());
-            // Load the product image using Glide or any other image loading library
+            environmentalEffectTextView.setText(product.getEnvironmentalEffects());
+            ecoFriendlyTipsTextView.setText(product.getEcoFriendlyTips());
+            alternativeProductsTextView.setText(product.getAlternativeProducts());
+
+            // Load the product image using Glide
             Glide.with(requireContext())
                     .load(product.getImageUrl())
                     .placeholder(R.drawable.product_image_placeholder)
                     .error(R.drawable.error_image)
                     .into(productImageView);
-            environmentalEffectTextView.setText(product.getEnvironmentalEffects());
-            ecoFriendlyTipsTextView.setText(product.getEcoFriendlyTips());
-            alternativeProductsTextView.setText(product.getAlternativeProducts());
         }
     }
 }
-
