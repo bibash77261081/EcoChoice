@@ -1,7 +1,9 @@
 package com.example.ecochoice.model;
 
-public class Product {
-    private String id;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Product implements Parcelable {
     private String name;
     private String description;
     private String imageUrl;
@@ -13,16 +15,6 @@ public class Product {
         //default constructor
     }
 
-    public Product(String id, String name, String description, String imageUrl, String environmentalEffects, String ecoFriendlyTips, String alternativeProducts) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.environmentalEffects = environmentalEffects;
-        this.ecoFriendlyTips = ecoFriendlyTips;
-        this.alternativeProducts = alternativeProducts;
-    }
-
     public Product(String name, String description, String imageUrl, String environmentalEffects, String ecoFriendlyTips, String alternativeProducts) {
         this.name = name;
         this.description = description;
@@ -30,14 +22,6 @@ public class Product {
         this.environmentalEffects = environmentalEffects;
         this.ecoFriendlyTips = ecoFriendlyTips;
         this.alternativeProducts = alternativeProducts;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -86,5 +70,42 @@ public class Product {
 
     public void setAlternativeProducts(String alternativeProducts) {
         this.alternativeProducts = alternativeProducts;
+    }
+
+    // Parcelable implementation
+    protected Product(Parcel in) {
+        name = in.readString();
+        description = in.readString();
+        imageUrl = in.readString();
+        environmentalEffects = in.readString();
+        ecoFriendlyTips = in.readString();
+        alternativeProducts = in.readString();
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(imageUrl);
+        dest.writeString(environmentalEffects);
+        dest.writeString(ecoFriendlyTips);
+        dest.writeString(alternativeProducts);
     }
 }

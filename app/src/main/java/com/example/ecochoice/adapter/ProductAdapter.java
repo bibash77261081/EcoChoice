@@ -26,6 +26,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    public Product getProduct(int position) {
+        if (products != null && position >= 0 && position < products.size()) {
+            return products.get(position);
+        }
+        return null;
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
@@ -41,7 +48,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = products.get(position);
         holder.bind(product);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    int adapterPosition = holder.getAdapterPosition();
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        Product clickedProduct = getProduct(adapterPosition);
+                        listener.onItemClick(clickedProduct);
+                    }
+                }
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
@@ -75,7 +96,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
         public void bind(Product product) {
             productNameTextView.setText(product.getName());
-            // Load the product image using Glide or any other image loading library
+            // Load the product image using Glide
             Glide.with(itemView.getContext())
                     .load(product.getImageUrl())
                     .placeholder(R.drawable.product_image_placeholder)

@@ -98,10 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void navigateToProductInformation(Product product) {
-        ProductInformationFragment productInformationFragment = new ProductInformationFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("product", (Serializable) product);
-        productInformationFragment.setArguments(bundle);
+        ProductInformationFragment productInformationFragment = ProductInformationFragment.newInstance(product);
         replaceFragment(productInformationFragment, TAG_PRODUCT_INFORMATION);
     }
 

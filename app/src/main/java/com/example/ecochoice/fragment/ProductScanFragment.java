@@ -2,6 +2,7 @@ package com.example.ecochoice.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,9 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.ecochoice.MainActivity;
 import com.example.ecochoice.R;
+import com.example.ecochoice.adapter.ProductAdapter;
 import com.example.ecochoice.model.Product;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -35,7 +38,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ProductScanFragment extends Fragment {
+public class ProductScanFragment extends Fragment implements ProductAdapter.OnItemClickListener{
 
     private Button scanButton;
     private ImageView productImageView;
@@ -65,6 +68,7 @@ public class ProductScanFragment extends Fragment {
         resultView = view.findViewById(R.id.resultLayout);
         addButton = view.findViewById(R.id.addButton);
         storedImageUrl = "N/A";
+
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +118,7 @@ public class ProductScanFragment extends Fragment {
 
         // Construct the URL for the API request with the scanned barcode
         String apiUrl = "https://product-lookup-by-upc-or-ean.p.rapidapi.com/code/" + barcode;
+
         Request request = new Request.Builder()
                 .url(apiUrl)
                 .get()
@@ -131,7 +136,6 @@ public class ProductScanFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -140,15 +144,14 @@ public class ProductScanFragment extends Fragment {
                     });
 
                     String responseData = response.body().string();
-
                     // Parse the response data and retrieve the product information
                     Product product = parseProductInformation(responseData);
                     // Display the retrieved product information in UI
                     displayProductInformation(product);
                 } else {
-                // Handle the API request error
-                handleApiRequestError(response);
-            }
+                    // Handle the API request error
+                    handleApiRequestError(response);
+                }
             }
         });
     }
@@ -161,40 +164,51 @@ public class ProductScanFragment extends Fragment {
             // Extract the name and description from the JSON object
             String name = productData.getString("name");
             String description = productData.getString("description");
-            String imageUrl = jsonObject.getString("imageUrl");
-//            String environmentalEffects = jsonObject.getString("environmental_impact");
-//            String ecoFriendlyTips = jsonObject.getString("eco_friendly_tips");
-//            String alternativeProducts = jsonObject.getString("alternative_products");
+            String imageUrl = productData.getString("imageUrl");
+            String environmentalEffects = "environmentalEffects";
+            String ecoFriendlyTips = "ecoFriendlyTips";
+            String alternativeProducts = "alternativeProducts";
+
+            if(imageUrl.equals(null) || imageUrl.equals("")){
+                imageUrl = "Image Not Found";
+            }else {
+                storedImageUrl = imageUrl;
+            }
+
+            if(name.equals(null) || name.equals("")){
+                name = "Name not found";
+            }
+
+            if(description.equals(null) || description.equals("")){
+                description = "description not found";
+            }
 
             // Create a new Product object with the extracted information
             Product product = new Product();
             product.setName(name);
             product.setDescription(description);
-//            product.setImageUrl(imageUrl);
-//            product.setEnvironmentalEffects(environmentalEffects);
-//            product.setEcoFriendlyTips(ecoFriendlyTips);
-//            product.setAlternativeProducts(alternativeProducts);
+            product.setImageUrl(imageUrl);
+            product.setEnvironmentalEffects(environmentalEffects);
+            product.setEcoFriendlyTips(ecoFriendlyTips);
+            product.setAlternativeProducts(alternativeProducts);
 
             return product;
+
         } catch (JSONException e) {
             e.printStackTrace();
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), "Product Not Found.", Toast.LENGTH_LONG).show();
-                }
-            });
             return null;
         }
     }
+
+
+
 
     private void displayProductInformation(Product product) {
         if (product != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    storedImageUrl = product.getImageUrl();
-
+                    // Display the retrieved product information in UI
                     Glide.with(getContext())
                             .load(storedImageUrl)
                             .placeholder(R.drawable.product_image_placeholder) // Placeholder image while loading
@@ -204,8 +218,9 @@ public class ProductScanFragment extends Fragment {
                     // Display the retrieved product information in UI
                     productNameTextView.setText(product.getName());
                     productDescriptionTextView.setText(product.getDescription());
-//                    environmentalImpactTextView.setText(environmentalImpact);
-//                    ecoFriendlyTipsTextView.setText(ecoFriendlyTips);
+                    environmentalEffectTextView.setText(product.getEnvironmentalEffects());
+                    ecoFriendlyTipsTextView.setText(product.getEcoFriendlyTips());
+                    alternativeProductsTextView.setText(product.getAlternativeProducts());
                 }
             });
         } else {
@@ -223,7 +238,8 @@ public class ProductScanFragment extends Fragment {
     private void handleApiRequestFailure(IOException e) {
         // Handle the API request failure
         e.printStackTrace();
-        Toast.makeText(getContext(), "Failed to fetch products: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        // Example: Show a Toast message
+        Toast.makeText(getContext(), "API request failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     private void handleApiRequestError(Response response) {
@@ -250,7 +266,7 @@ public class ProductScanFragment extends Fragment {
         String productId = productsRef.push().getKey();
 
         // Create a Product object with the scanned data
-        Product product = new Product(productId, productName, productDescription, imageUrl, environmentalEffects, ecoFriendlyTips, alternativeProducts);
+        Product product = new Product(productName, productDescription, imageUrl, environmentalEffects, ecoFriendlyTips, alternativeProducts);
 
         // Save the product to the Firebase database
         productsRef.child(productId).setValue(product).addOnCompleteListener(task -> {
@@ -260,5 +276,12 @@ public class ProductScanFragment extends Fragment {
                 Toast.makeText(getContext(), "Failed to add product", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(Product product) {
+        // Navigate to the ProductInformationFragment and pass the selected product
+        MainActivity mainActivity = (MainActivity) requireActivity();
+        mainActivity.navigateToProductInformation(product);
     }
 }
