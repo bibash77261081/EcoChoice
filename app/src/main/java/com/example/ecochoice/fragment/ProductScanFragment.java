@@ -181,6 +181,9 @@ public class ProductScanFragment extends Fragment implements ProductAdapter.OnIt
                 alternativeProducts = "Bulldog Original Bamboo Razor, Merkur 33C Classic Safety Razor";
             }else{
                 name = "Name not found";
+                environmentalEffects = "Environmental impacts not found";
+                ecoFriendlyTips = "Eco-friendly tips not found";
+                alternativeProducts = "Alternative products not found";
             }
 
             if(description.equals(null) || description.equals("")){
