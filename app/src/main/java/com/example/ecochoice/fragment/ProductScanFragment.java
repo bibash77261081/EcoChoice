@@ -175,7 +175,11 @@ public class ProductScanFragment extends Fragment implements ProductAdapter.OnIt
                 storedImageUrl = imageUrl;
             }
 
-            if(name.equals(null) || name.equals("")){
+            if(name.equals(getString(R.string.geemy_name))){
+                environmentalEffects = getString(R.string.geemy_impacts);
+                ecoFriendlyTips = getString(R.string.geemy_tips);
+                alternativeProducts = "Bulldog Original Bamboo Razor, Merkur 33C Classic Safety Razor";
+            }else{
                 name = "Name not found";
             }
 

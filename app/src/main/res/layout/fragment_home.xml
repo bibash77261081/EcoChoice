@@ -5,9 +5,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textStyle="italic|bold"
+        android:textColor="@color/green"
+        android:text="@string/eco_slogan"/>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
         android:layout_height="150dp" />
 
     <TextView
