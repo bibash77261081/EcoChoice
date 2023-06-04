@@ -28,9 +28,9 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView recommendedProductsRecyclerView;
+    RecyclerView recommendedProductsRecyclerView;
     private List<RecommendedProduct> recommendedProductsList;
-    private ViewPager2 viewPager2;
+    ViewPager2 viewPager2;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void setupSlideImage() {
+    public void setupSlideImage() {
         List<SlideItem> slideItems = new ArrayList<>();
         slideItems.add(new SlideItem(R.drawable.img1));
         slideItems.add(new SlideItem(R.drawable.img3));
@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         viewPager2.setAdapter(new SlideAdapter(slideItems, viewPager2));
     }
 
-    private void setupRecommendedProducts() {
+    public void setupRecommendedProducts() {
         // Initialize the recommended products list
         recommendedProductsList = new ArrayList<>();
 
