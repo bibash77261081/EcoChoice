@@ -95,9 +95,10 @@ public class ProductScanFragment extends Fragment implements ProductAdapter.OnIt
     private void startBarcodeScanner() {
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setPrompt("Scan a barcode");
+        integrator.setPrompt("Volume up key for flash");
         integrator.setCameraId(0); // Use rear camera
         integrator.setBeepEnabled(false);
+        integrator.setOrientationLocked(true);
         integrator.initiateScan();
     }
 
