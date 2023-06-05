@@ -74,6 +74,18 @@
             android:gravity="center"
             android:text="@string/alternative_products"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        
+        <Button
+            android:id="@+id/deleteProductButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="Delete"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
