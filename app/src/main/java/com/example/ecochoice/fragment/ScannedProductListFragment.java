@@ -1,5 +1,6 @@
 package com.example.ecochoice.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -7,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,13 +34,17 @@ public class ScannedProductListFragment extends Fragment implements ProductAdapt
     private DatabaseReference productsRef;
     private RecyclerView recyclerView;
     private ProductAdapter adapter;
+    private TextView listTextView;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scanned_product_list, container, false);
 
         // Initialize Firebase database reference
         productsRef = FirebaseDatabase.getInstance().getReference().child("products");
+
+        listTextView = view.findViewById(R.id.listTextView);
 
         // Initialize RecyclerView and its adapter
         recyclerView = view.findViewById(R.id.productRecyclerView);
@@ -63,6 +69,12 @@ public class ScannedProductListFragment extends Fragment implements ProductAdapt
                     productList.add(product);
                 }
                 adapter.setProducts(productList);
+
+                // Check if the product list is empty
+                if (productList.isEmpty()) {
+                    // Show a message indicating no products found
+                    listTextView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

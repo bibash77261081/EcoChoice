@@ -86,9 +86,8 @@ public class ProductInformationFragment extends Fragment {
                     String productName = product.getName();
                     String productDescription = product.getDescription();
 
-                    // Find the product in the database based on name and description
-                    Query query = databaseReference.orderByChild("name").equalTo(productName)
-                            .orderByChild("description").equalTo(productDescription);
+                    // Find the product in the database based on name
+                    Query query = databaseReference.orderByChild("name").equalTo(productName);
 
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -100,7 +99,7 @@ public class ProductInformationFragment extends Fragment {
                                             public void onSuccess(Void unused) {
                                                 // Deletion successful
                                                 Toast.makeText(requireContext(), "Product deleted", Toast.LENGTH_SHORT).show();
-                                                // Optionally, navigate back or perform other actions
+                                                ((MainActivity)requireActivity()).navigateToScannedProductList();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -110,7 +109,7 @@ public class ProductInformationFragment extends Fragment {
                                                 Toast.makeText(requireContext(), "Failed to delete product", Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                                break; // Assuming the product is unique based on name and description
+                                break;
                             }
                         }
                         @Override

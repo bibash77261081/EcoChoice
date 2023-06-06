@@ -15,6 +15,17 @@
         android:textColor="@color/black"
         android:layout_marginVertical="16dp" />
 
+    <TextView
+        android:id="@+id/listTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/list_is_empty"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_marginVertical="16dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/productRecyclerView"
         android:layout_width="match_parent"
