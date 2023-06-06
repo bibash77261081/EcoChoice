@@ -18,4 +18,6 @@
     <string name="geemy_impacts">Energy Consumption, Made of non-recyclable materials, Made of non-recyclable materials.</string>
     <string name="eco_slogan">"Embrace Sustainability: For a Greener Future!"</string>
     <string name="list_is_empty">List is empty!</string>
+    <string name="product_description_not_found">Product description not found</string>
+    <string name="alternative_products_not_found">Alternative products not found</string>
 </resources>

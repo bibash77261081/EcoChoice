@@ -180,7 +180,11 @@ public class ProductScanFragment extends Fragment implements ProductAdapter.OnIt
                 environmentalEffects = getString(R.string.geemy_impacts);
                 ecoFriendlyTips = getString(R.string.geemy_tips);
                 alternativeProducts = "Bulldog Original Bamboo Razor, Merkur 33C Classic Safety Razor";
-            }else{
+            }else if(name.equals(getString(R.string.geemy_name))){
+                environmentalEffects = getString(R.string.geemy_impacts);
+                ecoFriendlyTips = getString(R.string.geemy_tips);
+                alternativeProducts = "Bulldog Original Bamboo Razor, Merkur 33C Classic Safety Razor";
+            } else{
                 name = "Name not found";
                 environmentalEffects = "Environmental impacts not found";
                 ecoFriendlyTips = "Eco-friendly tips not found";
